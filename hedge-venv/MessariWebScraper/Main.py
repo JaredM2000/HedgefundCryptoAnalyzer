@@ -1,10 +1,11 @@
+from asyncio.windows_events import NULL
 from MessariWebScraper import MessariWebScraper as MWS
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import json
 
 websites = []
-with open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/hedge-venv/MessariWebScraper/links.txt', 'r') as f:
+with open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/MessariWebScraper/links.txt', 'r') as f:
         websites = f.readlines()
         f.close()
 
@@ -24,4 +25,6 @@ def ScrapeNewData():
     return hedgefunds
 
 def ReadExistingData():
-    return
+    f = open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/MessariWebScraper/data.json', 'r')
+    jsonData = json.load(f)
+    return jsonData
