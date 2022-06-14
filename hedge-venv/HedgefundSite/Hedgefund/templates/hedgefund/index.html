@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'hedgefund/style.css' %}">
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  </head>
+
+  <script>
+    var coinNames = '{{ coin_name }}';
+    var coinCounts = '{{ coin_count }}';
+
+    const data = {
+      labels: coinNames,
+      datasets: [{
+        label: 'Most Held Coins By Hedgefunds',
+        backgroundColor: 'rgb(255,99,132)',
+        borderColor: 'rgb(255,99,132)',
+        data: coinCounts,
+      }]
+    };
+
+    const config = {
+      type:'bar',
+      data: data,
+      options: {}
+    };
+    
+    console.log(coinNames.length);
+    
+  </script>
+
+
+
+
+  <body>
+    <div class="chartWrapper">
+      <div class="chartAreaWrapper">
+          <div class="chartAreaWrapper2">
+            <canvas id="chart-Test" height="1920" width="1080"></canvas>
+          </div>
+       </div>
+       <canvas id="axis-Test" height="300" width="0"></canvas>
+    </div>
+
+    <script>
+      const myChart = new Chart(
+        document.getElementById('chart-Test'),
+        config
+      );
+    </script>
+
+
+      {% if coin_name %}
+      <ul>
+      {% for coin in coin_name %}
+          <li><a href="/hedgefund/{{ coin }}/">{{ coin }}</a></li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+  </body>
+</html>
+
+<script>
+  
+</script>
