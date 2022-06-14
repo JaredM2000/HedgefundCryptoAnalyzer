@@ -8,13 +8,13 @@
   </head>
 
   <script>
-    var coinNames = '{{ coin_name }}';
-    var coinCounts = '{{ coin_count }}';
+    coinNames = {{ coin_name|safe }};
+    coinCounts = {{ coin_count|safe }};
 
     const data = {
       labels: coinNames,
       datasets: [{
-        label: 'Most Held Coins By Hedgefunds',
+        label: '# of Hedgefunds Currently Holding',
         backgroundColor: 'rgb(255,99,132)',
         borderColor: 'rgb(255,99,132)',
         data: coinCounts,
@@ -26,23 +26,18 @@
       data: data,
       options: {}
     };
-    
-    console.log(coinNames.length);
+    coinNames.forEach(element => console.log(element));
+
+    //console.log(coinNames);
+    //console.log(coinCounts.length);
     
   </script>
 
-
-
-
   <body>
     <div class="chartWrapper">
-      <div class="chartAreaWrapper">
-          <div class="chartAreaWrapper2">
-            <canvas id="chart-Test" height="1920" width="1080"></canvas>
-          </div>
-       </div>
-       <canvas id="axis-Test" height="300" width="0"></canvas>
+        <canvas id="chart-Test" height="960" width="580"></canvas>
     </div>
+ 
 
     <script>
       const myChart = new Chart(
@@ -50,15 +45,6 @@
         config
       );
     </script>
-
-
-      {% if coin_name %}
-      <ul>
-      {% for coin in coin_name %}
-          <li><a href="/hedgefund/{{ coin }}/">{{ coin }}</a></li>
-      {% endfor %}
-      </ul>
-      {% endif %}
   </body>
 </html>
 

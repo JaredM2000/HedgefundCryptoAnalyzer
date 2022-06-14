@@ -29,8 +29,8 @@ def test(request):
     print(coinList)
     print(countList)
 
-    context = { 'coin_name' : coinList,
-                'coin_count': countList }
+    context = { 'coin_name' : json.dumps(coinList),
+                'coin_count': json.dumps(countList) }
 
     return render(request, 'hedgefund/index.html', context)
 
