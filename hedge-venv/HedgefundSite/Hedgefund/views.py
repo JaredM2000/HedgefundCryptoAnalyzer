@@ -12,8 +12,15 @@ def index(request):
     return JsonResponse(data)
 
 def new(request):
-    #Main.ScrapeNewData()
-    return HttpResponse("hello")
+    Main.ScrapeNewData()
+    return HttpResponse("New Data has been scraped")
+
+def icons(request):
+    hedgeData = Main.ReadExistingData()
+    coinData = Main.TallyCoins(hedgeData)
+
+    Main.GrabIcons(coinData)
+    return HttpResponse("Coin icons added")
 
 def test(request):
     hedgeData = Main.ReadExistingData()
