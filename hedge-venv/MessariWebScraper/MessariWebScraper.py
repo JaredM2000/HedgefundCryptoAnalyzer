@@ -13,7 +13,7 @@ def GrabMessariData(website, driver):
 
     driver.get(website)
     driver.implicitly_wait(5)
-    time.sleep(2) #depending on load time we get an incorrect web page title, so we sleep, *we want title because it can tell us which hedgefund we are viewing"
+    time.sleep(2)               #depending on load time we get an incorrect web page title, so we sleep, *we want title because it can tell us which hedgefund we are viewing"
     hedgeName = driver.title
     print("Hedgefund: ",hedgeName)
 
@@ -22,47 +22,51 @@ def GrabMessariData(website, driver):
     )
 
     rawCSS = driver.find_elements(By.XPATH, "//*[@id='root']//*[contains(@class,'infinite-window')]/div/div/div[2]") #get the raw css
-    lines = [] #used to filter out CSS text line by line, *contains alot of junk lines*
-    coinNames = [] #holds just the coin names, *includes abbreviations which we want to remove*
-    filteredCoins = [] #will hold formatted list of coins
+    lines = []                                              #used to filter out CSS text line by line, *contains alot of junk lines*
+    coinNames = []                                          #holds just the coin names, *includes abbreviations which we want to remove*
+    filteredCoins = []                                      #will hold formatted list of coins
 
     for css in rawCSS:
-        lines += css.text.splitlines() #Split the css into lines
+        lines += css.text.splitlines()                      #Split the css into lines
 
     for line in lines:
-        if(line[0] == " " or len(line) == 1): #parse out junk lines
+        if(line[0] == " " or len(line) == 1):               #parse out junk lines
             pass
         else:
-            coinNames.append(line) #append coin names/abbreviations into other list
+            coinNames.append(line)                          #append coin names/abbreviations into other list
 
     for coin in range(len(coinNames)):
         if(coin % 2 == 0):
-            filteredCoins.append(coinNames[coin]) #coins are followed by their abbreviation so everyother element is a full coin name
+            filteredCoins.append(coinNames[coin])           #coins are followed by their abbreviation so everyother element is a full coin name
     
     return({hedgeName:filteredCoins})
 
 def GrabCoinIcons(coins ,driver):
     for coin in coins:
         print(coin.name)
+
         url = "https://www.messari.io/asset/"
         name = coin.name
-        if ":" in name:
+
+        if ":" in name:                                     #edge case for one coin with improper name for file
             continue
 
-        url = url + name.replace(" ", '-')
+        url = url + name.replace(" ", '-')                  #remove whitespace for urls
 
-        if exists("icons/{}.png".format(name)) == False:
+        if exists("icons/{}.png".format(name)) == False:    #if our folder already has an image don't grab a new one
             driver.implicitly_wait(5)
             element = None
-            while not element:
+            while not element:                              #loop for retries
                 try:
                     driver.get(url)
-                    if(driver.find_element(By.XPATH, "//*[@class = 'MuiAvatar-img css-1hy9t21 e1de0imv0']")):
+                    if(driver.find_element(By.XPATH, "//*[@class = 'MuiAvatar-img css-1hy9t21 e1de0imv0']")): #xpath to images
                         with open('icons/{}.png'.format(name), 'wb') as file:
                             element = driver.find_element(By.XPATH, "//*[@class = 'MuiAvatar-img css-1hy9t21 e1de0imv0']")
                             img = requests.get(element.get_attribute('src')).content
                             file.write(img)
                 except:
                     time.sleep(2)
-    return True
+        else:
+            coin.icon = "icons/{}.png".format(name)
+    return coins                                             #return list of coins with urls
         
