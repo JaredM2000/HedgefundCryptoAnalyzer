@@ -41,3 +41,8 @@ def test(request):
 
     return render(request, 'hedgefund/index.html', context)
 
+def test2(request):
+    coin = Main.getCoinInfo("Bitcoin")
+
+    return JsonResponse(coin, safe= False)
+
