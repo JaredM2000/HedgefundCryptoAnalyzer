@@ -1,3 +1,18 @@
-li a {
+@import url("https://fonts.googleapis.com/css2?family=Smooch&display=swap");
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Smooch", cursive;
+    color:red;
+}
+
+#status{
+    color:green
+}
+
+.coin-container{
     color: red;
 }
