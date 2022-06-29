@@ -1,11 +1,11 @@
 from asyncio.windows_events import NULL
+from genericpath import exists
 from email.errors import HeaderDefect
 from MessariWebScraper import MessariWebScraper as MWS
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from operator import itemgetter, attrgetter
-import json
-
+import json, os
 
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "none"   #Do not wait for full page load
@@ -37,8 +37,6 @@ class Coin:
                     json_dict['count'],
                     json_dict['icon'])
 
-
-
 def ScrapeNewData(): #scrapes the messari.io website for hedgefunds and their holdings
     hedgefunds = {}
 
@@ -49,15 +47,14 @@ def ScrapeNewData(): #scrapes the messari.io website for hedgefunds and their ho
 
     driver.quit()
 
-    f = open("hedgeCoinData.json", "w")
+    f = open("json/hedgeCoinData.json", "w")
     json.dump(hedgefunds, f, indent = "")
-    return True
+    return hedgefunds
 
 def ReadExistingData(): #reads a JSON file containing info on hedgefunds and their holdings
-    f = open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/HedgefundSite/hedgeCoinData.json', 'r')
+    f = open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/HedgefundSite/json/hedgeCoinData.json', 'r')
     jsonData = json.load(f)
     return jsonData
-
 
 def TallyCoins(hedgeDict): #takes raw data of hedgefunds and their holdings and tallies how many hedgefunds hold an individual coin
     coinCount = {}
@@ -70,30 +67,39 @@ def TallyCoins(hedgeDict): #takes raw data of hedgefunds and their holdings and 
 
     sortedCoins = []
     for coin,count in coinCount.items():
-        currCoin = Coin()
-        currCoin.name = coin
-        currCoin.count = count
+        currCoin = Coin(coin, count, None)
         sortedCoins.append(currCoin)
+
+    sortedCoins = sorted(sortedCoins, key=attrgetter('count'), reverse=True)
     
-    return sorted(sortedCoins, key=attrgetter('count'), reverse=True)
+    return sortedCoins
 
 def GrabIcons(coins):
     driver = webdriver.Chrome(desired_capabilities=caps, executable_path="C:/WebDrivers/bin/chromedriver.exe")
     coinIcons = MWS.GrabCoinIcons(coins, driver)
     
     for coin in coinIcons:
-        f = open("coins/{}.json".format(coin.name), "w")
+        f = open("json/coins/{}.json".format(coin.name), "w")
         json.dump(coin.toJSON(), f, indent = "")
     return coinIcons
 
-def getCoinInfo(coin):
-    f = open("coins/{}.json".format(coin), 'r')
-    jsonString = json.load(f)            #string JSON
-    jsonDict = json.loads(jsonString)    #JSON dict
-    coinObject = Coin.fromJSON(jsonDict) #actual class object
+def getCoin(coin):
+    if exists("icons/{}.png".format(coin)) == True:
+        f = open("json/coins/{}.json".format(coin), 'r')
+        jsonString = json.load(f)            #string JSON
+        jsonDict = json.loads(jsonString)    #JSON dict
+        coinObject = Coin.fromJSON(jsonDict) #actual class object
+        return coinObject
+    else:
+        return None
 
-    return coinObject
+def getCoins():
+    coins = []
+    for filename in os.scandir("json/coins"):
+        f = open(filename.path, 'r')
+        jsonString = json.load(f)            #string JSON
+        jsonDict = json.loads(jsonString)    #JSON dict
+        coins.append(jsonDict)
         
-
-
-
+    print(coins)
+    return coins

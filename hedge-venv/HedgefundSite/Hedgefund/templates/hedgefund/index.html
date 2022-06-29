@@ -4,50 +4,39 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(e){
+        $("button").click(function(){
+          $.ajax({url:"old", dataType: 'text json', success: function(result){
+            for(var key in result)
+            {
+              $("#coin-list").append("<il>" + result[key] + "</il>" + "</br>")
+              $("#hedgefund-list").append("<il>" + key + "</il>"+ "</br>")
+            }
+            $("#status").html("Results are here")
+          }})
+        })
+      })
+
+    </script>
   </head>
 
-  <script>
-    coinNames = {{ coin_name|safe }};
-    coinCounts = {{ coin_count|safe }};
 
-    const data = {
-      labels: coinNames,
-      datasets: [{
-        label: '# of Hedgefunds Currently Holding',
-        backgroundColor: 'rgb(255,99,132)',
-        borderColor: 'rgb(255,99,132)',
-        data: coinCounts,
-      }]
-    };
-
-    const config = {
-      type:'bar',
-      data: data,
-      options: {}
-    };
-    coinNames.forEach(element => console.log(element));
-
-    //console.log(coinNames);
-    //console.log(coinCounts.length);
-    
-  </script>
 
   <body>
-    <div class="chartWrapper">
-        <canvas id="chart-Test" height="960" width="580"></canvas>
-    </div>
- 
+    <p id="status">Current Status of request</p>
 
-    <script>
-      const myChart = new Chart(
-        document.getElementById('chart-Test'),
-        config
-      );
-    </script>
+    <div class="hedgefund-container">
+      <ul id="hedgefund-list"></ul>
+    </div>
+
+    <div class="coin-container">
+      <ul id="coin-list"> </ul>
+    </div>
+
+
+    <button id="ajaxButton">Send Request</button>
   </body>
 </html>
 
-<script>
-  
-</script>
+

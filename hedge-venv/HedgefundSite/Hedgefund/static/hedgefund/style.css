@@ -5,12 +5,11 @@
 }
 
 body{
-    font-family: "Smooch", cursive;
     color:red;
 }
 
 #status{
-    color:green
+    color:blue
 }
 
 .coin-container{
