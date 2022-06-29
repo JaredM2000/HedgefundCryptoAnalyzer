@@ -27,14 +27,14 @@ def old(request):
     return JsonResponse(response)
 
 def getCoins(request):
-    coins = Main.getCoins()
+    coins = Main.GetCoins()
 
     return JsonResponse(coins, safe=False)
 
 def getCoin(request):
     coinName = request.GET.get("coin", "")
-    coinInfo = Main.getCoin(coinName)
-    
+    coinInfo = Main.GetCoin(coinName)
+
     return JsonResponse(coinInfo, encoder=JsonEncoder, safe=False)
 
 def icons(request):
@@ -45,8 +45,12 @@ def icons(request):
     return HttpResponse("Coin icons added")
 
 def test(request):
+    
 
-    return render(request, 'hedgefund/index.html')
+    context = {
+
+    }
+    return render(request, 'hedgefund/index.html', context)
 
 def test2(request):
     coin = Main.getCoin("Bitcoin")
