@@ -26,3 +26,16 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
     def __str__(self):
         return self.choice_text
+
+
+class ImageManager(models.Manager):
+    def create_image(self, name, path):
+        image = self.create(name = name, path = path)
+        return image
+
+class Image(models.Model):
+    name = models.CharField(max_length=20)
+    image = models.ImageField(upload_to="")
+
+    objects = ImageManager()
+    

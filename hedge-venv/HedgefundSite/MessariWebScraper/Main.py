@@ -13,7 +13,7 @@ options = webdriver.ChromeOptions()
 options.add_argument('ignore-certificate-errors') #ignore SSL cert errors
 
 websites = []  #reads our text file containing the urls of each hedgefund on messari.io
-with open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/MessariWebScraper/links.txt', 'r') as f:
+with open('C:/Users/jared/Desktop/GitHub/HedgefundDjangoServer/HedgefundCryptoAnalyzer/hedge-venv/HedgefundSite/MessariWebScraper/links.txt', 'r') as f:
         websites = f.readlines()
         f.close()
 
@@ -83,7 +83,7 @@ def GrabIcons(coins):
         json.dump(coin.toJSON(), f, indent = "")
     return coinIcons
 
-def getCoin(coin):
+def GetCoin(coin):
     if exists("icons/{}.png".format(coin)) == True:
         f = open("json/coins/{}.json".format(coin), 'r')
         jsonString = json.load(f)            #string JSON
@@ -93,7 +93,7 @@ def getCoin(coin):
     else:
         return None
 
-def getCoins():
+def GetCoins():
     coins = []
     for filename in os.scandir("json/coins"):
         f = open(filename.path, 'r')
@@ -103,3 +103,10 @@ def getCoins():
         
     print(coins)
     return coins
+
+def migrateImages():
+    coins = GetCoins()
+    for coin in coins:
+        c = Coin.fromJSON(coin)
+        
+        

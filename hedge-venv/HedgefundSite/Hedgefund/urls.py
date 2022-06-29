@@ -15,6 +15,4 @@ urlpatterns = [
     path('coin', views.getCoin, name='Grab Coins'),
     path('test', views.test, name='Test Page'),
     path('test2', views.test2, name='Test Page')
-]
-
-#urlpatterns += staticfiles_urlpatterns()
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,7 @@
 from django.contrib import admin
 
-from .models import Question, Choice
+from .models import Question, Choice, Image
 # Register your models here.
-
-
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
@@ -19,4 +17,9 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date']
     search_fields = ['question_text']
 
+class imageAdmin(admin.ModelAdmin):
+    list_display = ["name", "image"]
+    
+
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Image, imageAdmin)
